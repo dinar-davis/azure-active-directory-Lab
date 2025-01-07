@@ -27,21 +27,21 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
    - Assign the VM to the previously created Virtual Network and Subnet.
    - Configure any additional settings as needed, then click "Review + Create" and "Create" to deploy the VM.
 
-![Azure Resource_Group Creation](images/ad-2.png)
+![Azure VM Creation](images/ad-2.png)
 
 4. **Set Domain Controller’s NIC Private IP Address to Static**
    - After the VM is deployed, go to the "Networking" section of the VM in the Azure Portal.
    - Locate the Network Interface Card (NIC) and click on it.
    - In the NIC settings, set the Private IP Address to "Static" to ensure it remains constant.
   
-![Azure Resource_Group Creation](images/ad-3.png)
+![Set Static IP](images/ad-3.png)
 
 5. **Log into the VM and Disable the Windows Firewall (for testing connectivity)**
    - Connect to the "DC-1" VM using Remote Desktop Protocol (RDP).
    - Once logged in, open the "Windows Firewall" settings.
    - Temporarily disable the firewall for testing purposes.
 
-![Azure Resource_Group Creation](images/ad-4.png)
+![Disable Firewall](images/ad-4.png)
 
 ## Setup Client-1 in Azure
 
@@ -57,7 +57,7 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
    - After the VM is created, navigate to the "Networking" section of the "Client-1" VM in the Azure Portal.
    - Under "DNS Servers", change the setting to the static private IP address of "DC-1".
   
-![Azure Resource_Group Creation](images/ad-5.png)
+![Set Client-1 Static DNS](images/ad-5.png)
 
 3. **Restart Client-1 from the Azure Portal**
    - From the Azure Portal, go to the "Overview" page of "Client-1".
@@ -81,7 +81,7 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
      ```
    - Verify that the DNS settings show the private IP address of "DC-1".
   
-![Azure Resource_Group Creation](images/ad-6.png)
+![Run ping and ipconfig](images/ad-6.png)
      
 
 # Installing Active Directory and Managing Users in Azure
@@ -97,12 +97,12 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
 - Open **Server Manager**, and select **Add Roles and Features**.
 - In the **Add Roles and Features Wizard**, select **Active Directory Domain Services** and complete the installation process.
 
-![Azure Resource_Group Creation](images/ad-7.png)
+![Install Domain Services](images/ad-7.png)
 
 - Once the installation is complete, click on the **Promote this server to a domain controller** link.
 - Set up a **new forest** with the domain name `mydomain.com` (or any name you prefer, but remember it).
 
-![Azure Resource_Group Creation](images/ad-8.png)
+![Create New Forest](images/ad-8.png)
 
 - Complete the configuration and allow the system to restart.
 
@@ -120,11 +120,11 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
   - Username: `jane_admin`
   - Password: `Password123!`
  
-![Azure Resource_Group Creation](images/ad-9.png)
+![Create User](images/ad-9.png)
 
 - Right-click on **jane_admin** and add them to the **Domain Admins** security group.
 
-![Azure Resource_Group Creation](images/ad-10.png)
+![Add User To Admins](images/ad-10.png)
 
 - Log out from **DC-1** and log back in using the new admin credentials:
   - Username: `mydomain.com\jane_admin`
@@ -136,7 +136,7 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
 - Restart **Client-1** if not already restarted (this should have been done in a previous step).
 - Log into **Client-1** using the local admin account (`labuser`), and join the machine to the domain (`mydomain.com`).
 
-![Azure Resource_Group Creation](images/ad-11.png)
+![Join Client-1 To Domain](images/ad-11.png)
 
 - The machine will automatically restart after joining the domain.
 
@@ -144,7 +144,7 @@ This lab will demonstrate the process of setting up a **Domain Controller** and 
 - Log into **DC-1** and open **Active Directory Users and Computers (ADUC)**.
 - Verify that **Client-1** appears in the list of machines under **mydomain.com**.
 
-![Azure Resource_Group Creation](images/ad-11.png)
+![Confirm Client-1 Added To ADUC](images/ad-12.png)
 
 - Create a new **Organizational Unit (OU)** named **_CLIENTS** in **ADUC**.
 - Drag and drop **Client-1** into the **_CLIENTS** OU.
@@ -270,13 +270,13 @@ while ($count -lt $NUMBER_OF_ACCOUNTS_TO_CREATE) {
 - In the **Account** tab, uncheck **Account is locked out**.
 - Click **OK** to unlock the account.
 
-![Azure Resource_Group Creation](images/ad-13.png)
+![Unlock Account](images/ad-13.png)
 
 ### 3.5 Reset the Password and Attempt to Log In
 - Reset the password for the account to a new one.
 - Attempt to log in with the new password to confirm the account is now accessible.
 
-![Azure Resource_Group Creation](images/ad-14.png)
+![Reset Password](images/ad-14.png)
 
 ---
 
@@ -285,7 +285,7 @@ while ($count -lt $NUMBER_OF_ACCOUNTS_TO_CREATE) {
 ### 4.1 Disable the Same Account in Active Directory
 - Right-click the selected user account in **ADUC** and select **Disable Account**.
 
-![Azure Resource_Group Creation](images/ad-15.png)
+![Disable Account](images/ad-15.png)
 
 ### 4.2 Attempt to Log in with the Disabled Account
 - Try logging into **Client-1** using the disabled account.
@@ -303,7 +303,7 @@ while ($count -lt $NUMBER_OF_ACCOUNTS_TO_CREATE) {
 - On **DC-1**, press `Start` → `Run`, and type `eventvwr.msc` to open the **Event Viewer**.
 - Review the security logs for events related to failed login attempts and account lockouts.
 
-![Azure Resource_Group Creation](images/ad-16.png)
+![Check Log](images/ad-16.png)
 
 ### 5.2 Observe Logs on the Client Machine
 - On **Client-1**, press `Start` → `Run`, and type `eventvwr.msc` to open the **Event Viewer**.
